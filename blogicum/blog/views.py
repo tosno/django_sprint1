@@ -58,10 +58,9 @@ def index(request):
 
 def post_detail(request, post_id):
     posts_detail = {post['id']: post for post in posts}
-    try:
-        context = posts_detail[post_id]
-    except KeyError:
+    if posts_detail.get(post_id, None) is None:
         raise Http404()
+    context = {'post': posts_detail[post_id]}
     return render(request, 'blog/detail.html', context)
 
 
