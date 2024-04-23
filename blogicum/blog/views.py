@@ -1,4 +1,6 @@
+from django.http import Http404
 from django.shortcuts import render
+
 
 posts = [
     {
@@ -43,20 +45,29 @@ posts = [
     },
 ]
 
+""""Функция возвращает главную страницу"""
+
 
 def index(request):
-    template_name = 'blog/index.html'
-    context = {'posts': posts.__reversed__()}
-    return render(request, template_name, context)
+    context = {'posts': posts}
+    return render(request, 'blog/index.html', context)
 
 
-def post_detail(request, id):
-    template_name = 'blog/detail.html'
-    context = {'post': posts[id]}
-    return render(request, template_name, context)
+""""Функция возвращает пост"""
+
+
+def post_detail(request, post_id):
+    posts_detail = {post['id']: post for post in posts}
+    try:
+        context = posts_detail[post_id]
+    except KeyError:
+        raise Http404()
+    return render(request, 'blog/detail.html', context)
+
+
+""""Функция возвращает категорию поста"""
 
 
 def category_posts(request, category_slug):
-    template_name = 'blog/category.html'
-    context = {'category': category_slug}
-    return render(request, template_name, context)
+    context = {'category_slug': category_slug}
+    return render(request, 'blog/category.html', context)
