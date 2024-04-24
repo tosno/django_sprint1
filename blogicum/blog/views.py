@@ -44,29 +44,24 @@ posts = [
                 укутывал их, чтобы не испортились от дождя.''',
     },
 ]
-
-""""Функция возвращает главную страницу"""
+posts_detail = {post['id']: post for post in posts}
 
 
 def index(request):
+    """Функция возвращает главную страницу."""
     context = {'posts': posts}
     return render(request, 'blog/index.html', context)
 
 
-""""Функция возвращает пост"""
-
-
 def post_detail(request, post_id):
-    posts_detail = {post['id']: post for post in posts}
+    """Функция возвращает пост."""
     if posts_detail.get(post_id, None) is None:
-        raise Http404()
+        raise Http404(f"Страница с постом {post_id} не найдена")
     context = {'post': posts_detail[post_id]}
     return render(request, 'blog/detail.html', context)
 
 
-""""Функция возвращает категорию поста"""
-
-
 def category_posts(request, category_slug):
+    """Функция возвращает категорию поста."""
     context = {'category_slug': category_slug}
     return render(request, 'blog/category.html', context)
